@@ -1,0 +1,107 @@
+Janrain Engage Library v2.0 API Reference
+(The API docs for Janrain Engage are located here: https://rpxnow.com/docs)
+
+---------
+authinfo()
+----------
+API Call: auth_info
+Params: Extended (defaults to TRUE, set to FALSE to disable extended profile data)
+Returns: Array of user profile info
+(https://rpxnow.com/docs#api_auth_info)
+---------------------------------------
+Before calling this function, call the token() function with the token from the Token URL.
+Example:
+$this->engage->token($this->input->get('token'));
+$response = $this->engage->authinfo();
+echo $response['profile']['identifier']; //Prints the URL the user logged in with
+
+----------
+contacts()
+----------
+API Call: get_contacts
+Params: Identifier (returned from authinfo())
+Returns: Array of user's contacts
+(https://rpxnow.com/docs#api_get_contacts)
+------------------------------------------
+Example:
+$contacts = $this->engage->contacts($identifier);
+echo $contacts[0]['displayName']; // Prints name of 1st contact
+echo $contacts[0]['emails'][0]['value']; // Prints 1st email of 1st contact
+
+----------
+userData()
+----------
+API Call: get_user_data
+Params: Identifier (returned from authinfo())
+        Extended (defaults to TRUE, set to FALSE to disable extended profile data)
+Returns: Array of user profile info (same as authinfo())
+(https://rpxnow.com/docs/get_user_data)
+---------------------------------------
+Example:
+$response = $this->engage->userData($identifier);
+echo $response['profile']['identifier']; //Prints the URL the user logged in with
+
+--------
+status()
+--------
+API Call: set_status/activity
+Params: Identifier (returned from authinfo())
+        Message to send (status or activity feed)
+        Activity (set to TRUE to send activity API call, FALSE for set_status.  Defaults to FALSE)
+Returns: TRUE or FALSE
+NOTE: set_status requires that the mesage be a string
+      activity requires that the message be an array
+(https://rpxnow.com/docs#api_set_status)
+(https://rpxnow.com/docs#api_activity)
+--------------------------------------
+Example:
+// Let's say the user logged in using Twitter
+$this->engage->status($identifier, "I'm updating Twitter");
+
+// If the user logged in using Facebook, we can post a feed to the wall
+$activity = array(
+  'url' => 'http://example.com',
+  'action' => 'updated his Facebook status.',
+  'user_generated_content' => 'This was sent from my website.',
+);
+$this->engage->status($identifier, $activity, TRUE);
+
+-----
+map()
+-----
+API Call: map/unmap
+Params: UserID (The primary key from your users table - as string)
+        Identifier (returned from authinfo())
+        Overwrite (Only for map, not unmap.  Defaults to TRUE, set to FALSE to create the map if one does not already exist)
+        Unmap (Set to TRUE to call unmap instead of map)
+        All (Set to TRUE to remove all mappings for a user)
+        Unlink (Set to TRUE to unlink account from provider)
+Returns: TRUE or FALSE
+(https://rpxnow.com/docs#api_map)
+(https://rpxnow.com/docs#api_unmap)
+-----------------------------------
+Example:
+// Set a mapping for a user
+$this->engage->map($userID, $identifier); // Maps $identifier to $userID
+
+// Unmap a user's identifier
+$this->engage->map($userID, $identifier, '', TRUE); // Unmaps $userID from $identifier
+
+----------
+mappings()
+----------
+API Call: mappings/all_mappings
+Params: UserID (The primary key from your users table - as string)
+        All (Set to TRUE to get all mappings.  Defaults to FALSE)
+Returns: Array of mappings
+(https://rpxnow.com/docs#api_mappings)
+(https://rpxnow.com/docs#api_all_mappings)
+------------------------------------------
+Example:
+// Get all mappings for a user
+$mappings = $this->engage->mappings($userID);
+echo $mappings['identifiers'][0]; // Prints the 1st mapped identifier
+
+// Get all mappings in the system
+$mappings = $this->engage->mappings('', TRUE);
+//print_r($mappings['mappings']); // Prints all mappings in system
