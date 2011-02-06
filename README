@@ -29,15 +29,9 @@ Open the engage_conf.php and set your RPX URL, API Key, and Token URL (will be s
 ----------------------
 When a user uses Engage to login, rpxnow.com passes your Token URL a 'token' that is used to get the user's data.
 We need to create a controller to receive this token and make the correct API calls.  A basic controller is included in this package.
-rpxnow.com passes the token using GET, so we need to make sure CodeIgniter can accept this.
-We can use .htaccess to make this URL.  Add the following to your .htaccess file (and edit accordingly).
+rpxnow.com passes the token using POST (or GET if you wish).  CodeIgniter 2.0 can use the GET array, but POST is recommended.
 
-RewriteEngine On
-RewriteBase /
-RewriteRule ^engagelogin$ index.php?c=engage [QSA]
-
-This will make your Token URL http://example.com/engagelogin.  This will be rewritten to http://example.com/index.php?c=engage.
-The '[QSA]' flag will make sure the token is passed to the controller.
+You're token URL should be the location of the controller.
 
 3. Adding Engage login box to page
 ----------------------------------
