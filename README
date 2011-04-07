@@ -31,7 +31,7 @@ When a user uses Engage to login, rpxnow.com passes your Token URL a 'token' tha
 We need to create a controller to receive this token and make the correct API calls.  A basic controller is included in this package.
 rpxnow.com passes the token using POST (or GET if you wish).  CodeIgniter 2.0 can use the GET array, but POST is recommended.
 
-You're token URL should be the location of the controller.
+Your token URL should be the location of the controller.
 
 3. Adding Engage login box to page
 ----------------------------------
